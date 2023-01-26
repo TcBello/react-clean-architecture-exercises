@@ -1,0 +1,58 @@
+*{
+  height: 100%;
+  width: 100%;
+  margin: 0px;
+}
+
+.background-gradient{
+  background-image: linear-gradient(to right, #cc2b5e, #753a88);
+}
+
+.content-center{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.todo-container{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  width: 50%;
+  height: auto;
+  padding: 10px;
+  background-color: #00264D;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+.todo-input{
+  background-color: white;
+  width: 75%;
+  border-radius: 5px;
+}
+
+.add-button{
+  width: 20%;
+  background-color: green;
+}
+
+.todo-content-container{
+  width: 50%;
+  height: auto;
+  border-radius: 10px;
+  background-color: #00264D;
+  padding: 20px;
+}
+
+.table-container{
+  background-color: white;
+}
+
+.action-buttons-container{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
