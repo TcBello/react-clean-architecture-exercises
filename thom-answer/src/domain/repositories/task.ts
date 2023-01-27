@@ -1,9 +1,9 @@
 import { TaskEntity } from "../entities/task";
 
 export interface TaskRepository{
-    getAllTasks(): Promise<TaskEntity[]>;
+    getAllTasks(): TaskEntity[];
     getTask(): Promise<TaskEntity>;
-    addTask(): Promise<boolean>;
-    removeTask(): Promise<boolean>;
-    updateTask(): Promise<boolean>;
+    addTask(value: TaskEntity): boolean;
+    removeTask(value: TaskEntity): boolean;
+    updateTask(value: TaskEntity): boolean;
 }

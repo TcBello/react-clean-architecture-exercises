@@ -1,20 +1,67 @@
+import { storageGetItem, storageSetItem } from "../app/utils/local_storage";
 import { TaskEntity } from "../domain/entities/task";
 import { TaskRepository } from "../domain/repositories/task";
 
 export class TaskDataRepository implements TaskRepository{
-     async getAllTasks(): Promise<TaskEntity[]> {
-        throw new Error("Method not implemented.");
+    getAllTasks(): TaskEntity[] {
+        try{
+            // GET THE CURRENT TASKS IN LOCAL STORAGE
+            let currentTasks: TaskEntity[] = [];
+            let storageData = storageGetItem('tasks');
+
+            if(storageData != null){
+                currentTasks = [JSON.parse(storageData)];
+            }
+
+            return currentTasks;
+        }
+        catch(e){
+            console.log(`Something went wrong: ${e}`);
+        }
+
+        return [] as TaskEntity[];
     }
     async getTask(): Promise<TaskEntity> {
         throw new Error("Method not implemented.");
     }
-    async addTask(): Promise<boolean> {
-        throw new Error("Method not implemented.");
+    addTask(value: TaskEntity): boolean {
+        try{
+            // GET THE CURRENT TASKS IN LOCAL STORAGE
+            let currentTasks: TaskEntity[] = [];
+            let storageData = storageGetItem("tasks");
+
+            if(storageData != null){
+                currentTasks = [JSON.parse(storageData)];
+            }
+
+            // ADD NEW TASK
+            currentTasks.push(value);
+            
+            // UPDATE THE TASKS IN THE LOCAL STORAGE
+            storageSetItem('tasks', TaskEntity.toJSON(value));
+
+            return true;
+        }
+        catch(e){
+            console.log(`Something went wrong: ${e}`);
+        }
+
+        return false;
     }
-    async removeTask(): Promise<boolean> {
-        throw new Error("Method not implemented.");
+    removeTask(value: TaskEntity): boolean {
+        try{}
+        catch(e){
+            console.log(`Something went wrong: ${e}`);
+        }
+
+        return false;
     }
-    async updateTask(): Promise<boolean> {
-        throw new Error("Method not implemented.");
+    updateTask(): boolean {
+        try{}
+        catch(e){
+            console.log(`Something went wrong: ${e}`);
+        }
+
+        return false;
     }
 }

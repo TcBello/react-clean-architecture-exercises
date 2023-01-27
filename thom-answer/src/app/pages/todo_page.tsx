@@ -1,14 +1,47 @@
 import { TextField, Button, Table, TableHead, TableRow, TableCell, TableBody } from "@mui/material";
+import { useEffect, useState } from "react";
+import { TaskDataRepository } from "../../data/task";
+import { TaskEntity } from "../../domain/entities/task";
+import { uid } from "uid";
+import { features } from "process";
 
 export const TodoPage = () => {
+    const [title, setTitle] = useState("");
+    const [tasks, setTasks] = useState<TaskEntity[]>([
+        new TaskEntity("", "")
+    ]);
+    const taskRepo = new TaskDataRepository();
+
+    function add(){
+        let result = false;
+
+        if(title != ""){
+            result = taskRepo.addTask(new TaskEntity(uid(32), title));
+        }
+
+        if(result){
+            setTitle("");
+            fetchAllTasks();
+        }
+    }
+
+    function fetchAllTasks(){
+        const currentTasks = taskRepo.getAllTasks();
+        setTasks(currentTasks);
+    }
+
+    useEffect(() => {
+        fetchAllTasks();
+    }, []);
+    
     return (
         <div className='background-gradient'>
             <div className='content-center'>
                 <div className='todo-container'>
                     {/* TODO FIELD */}
-                    <TextField id="filled-basic" label="Add New Todo" variant="filled" className='todo-input' />
+                    <TextField id="filled-basic" label="Add New Todo" variant="filled" className='todo-input' onChange={(e) => {setTitle(e.target.value)}} />
                     {/* TODO INPUT */}
-                    <Button variant="contained" style={{ width: '20%', backgroundColor: '#0052A2' }}>Add</Button>
+                    <Button variant="contained" style={{ width: '20%', backgroundColor: '#0052A2' }} onClick={add}>Add</Button>
                 </div>
                 <div className='todo-content-container'>
                     <div className='table-container'>
@@ -22,15 +55,19 @@ export const TodoPage = () => {
                             </TableHead>
                             {/* TABLE CONTENT */}
                             <TableBody style={{ height: 50 }}>
-                                <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                                    <TableCell>1st Todo Title</TableCell>
-                                    <TableCell>
-                                        <div className='action-buttons-container'>
-                                            <Button variant="contained" style={{ width: 60, height: 50, backgroundColor: '#0052A2', marginLeft: 5, marginRight: 5 }}>Update</Button>
-                                            <Button variant="contained" style={{ width: 60, height: 50, backgroundColor: '#B41C1C', marginLeft: 5, marginRight: 5 }}>Remove</Button>
-                                        </div>
-                                    </TableCell>
-                                </TableRow>
+                                {tasks.map((value, index) => {
+                                    return (
+                                        <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                                            <TableCell>{value['title']}</TableCell>
+                                            <TableCell>
+                                                <div className='action-buttons-container'>
+                                                    <Button variant="contained" style={{ width: 60, height: 50, backgroundColor: '#0052A2', marginLeft: 5, marginRight: 5 }}>Update</Button>
+                                                    <Button variant="contained" style={{ width: 60, height: 50, backgroundColor: '#B41C1C', marginLeft: 5, marginRight: 5 }}>Remove</Button>
+                                                </div>
+                                            </TableCell>
+                                        </TableRow>
+                                    );
+                                })}
                             </TableBody>
                         </Table>
                     </div>
