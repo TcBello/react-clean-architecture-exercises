@@ -1,0 +1,24 @@
+.modal{
+    width: 30%;
+    height: 30%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+}
+
+.modal-content-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.task-input{
+    background-color: white;
+    width: 75%;
+    border-radius: 5px;
+    width: 80%;
+    height: 80px;
+}

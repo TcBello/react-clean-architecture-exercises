@@ -7,8 +7,11 @@ export class TaskEntity{
         this.title = title;
     }
 
-    static toJSON(value: TaskEntity[]){
-        return JSON.stringify(value);
+    static toJSON(value: TaskEntity){
+        return {
+            id: value.id,
+            title: value.title
+        };
     }
 
     static fromJSON(value: string){
