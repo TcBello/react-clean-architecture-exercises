@@ -7,21 +7,19 @@ import { features } from "process";
 
 export const TodoPage = () => {
     const [title, setTitle] = useState("");
-    const [tasks, setTasks] = useState<TaskEntity[]>([
-        new TaskEntity("", "")
-    ]);
+    const [tasks, setTasks] = useState<TaskEntity[]>([]);
     const taskRepo = new TaskDataRepository();
 
     function add(){
         let result = false;
 
         if(title != ""){
-            result = taskRepo.addTask(new TaskEntity(uid(32), title));
+            setTasks([...tasks, new TaskEntity(uid(32), title)]);
+            result = taskRepo.addTask(tasks);
         }
 
         if(result){
             setTitle("");
-            fetchAllTasks();
         }
     }
 

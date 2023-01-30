@@ -10,10 +10,11 @@ export class TaskDataRepository implements TaskRepository{
             let storageData = storageGetItem('tasks');
 
             if(storageData != null){
-                currentTasks = [JSON.parse(storageData)];
+                currentTasks = JSON.parse(storageData);
             }
+            console.log(currentTasks);
 
-            return currentTasks;
+            // return currentTasks;
         }
         catch(e){
             console.log(`Something went wrong: ${e}`);
@@ -24,18 +25,18 @@ export class TaskDataRepository implements TaskRepository{
     async getTask(): Promise<TaskEntity> {
         throw new Error("Method not implemented.");
     }
-    addTask(value: TaskEntity): boolean {
+    addTask(value: TaskEntity[]): boolean {
         try{
             // GET THE CURRENT TASKS IN LOCAL STORAGE
-            let currentTasks: TaskEntity[] = [];
-            let storageData = storageGetItem("tasks");
+            // let currentTasks: TaskEntity[] = [];
+            // let storageData = storageGetItem("tasks");
 
-            if(storageData != null){
-                currentTasks = [JSON.parse(storageData)];
-            }
+            // if(storageData != null){
+            //     currentTasks = [JSON.parse(storageData)];
+            // }
 
             // ADD NEW TASK
-            currentTasks.push(value);
+            // currentTasks.push(value);
             
             // UPDATE THE TASKS IN THE LOCAL STORAGE
             storageSetItem('tasks', TaskEntity.toJSON(value));
