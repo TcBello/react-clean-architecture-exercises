@@ -1,6 +1,6 @@
-import { storageGetItem, storageSetItem } from "../app/utils/local_storage";
 import { TaskEntity } from "../domain/entities/task";
 import { TaskRepository } from "../domain/repositories/task";
+import { storageGetItem, storageSetItem } from "./utils/local_storage";
 
 export class TaskDataRepository implements TaskRepository{
     getAllTasks(): TaskEntity[] {
