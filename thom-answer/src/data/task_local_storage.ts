@@ -2,7 +2,7 @@ import { TaskEntity } from "../domain/entities/task";
 import { TaskRepository } from "../domain/repositories/task";
 import { storageGetItem, storageSetItem } from "./utils/local_storage";
 
-export class TaskDataRepository implements TaskRepository{
+export class TaskLocalStorageDataRepository implements TaskRepository{
     getAllTasks(): TaskEntity[] {
         try{
             // GET THE CURRENT TASKS IN LOCAL STORAGE
@@ -92,8 +92,9 @@ export class TaskDataRepository implements TaskRepository{
             // THE TASK ENTITIES BY ID
             currentTasks.forEach(element => {
                 if(element['id'] == value['id']){
+                    const itemIndex = currentTasks.indexOf(element);
                     // REPLACE THE TASK IN THE LIST
-                    currentTasks.splice(currentTasks.indexOf(element), 1, value);
+                    currentTasks[itemIndex] = value;
                     
                     // // UPDATE THE TASKS IN THE LOCAL STORAGE
                     storageSetItem('tasks', JSON.stringify(currentTasks));

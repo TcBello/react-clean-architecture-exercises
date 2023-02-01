@@ -1,17 +1,17 @@
 import { TextField, Button, Table, TableHead, TableRow, TableCell, TableBody, Modal } from "@mui/material";
 import { useEffect, useState } from "react";
-import { TaskDataRepository } from "../../data/task";
 import { TaskEntity } from "../../domain/entities/task";
 import { uid } from "uid";
 import { features } from "process";
 import { Box } from "@mui/system";
 import "./todo_page.css";
+import { TaskLocalStorageDataRepository } from "../../data/task_local_storage";
 
 export const TodoPage = () => {
     const [title, setTitle] = useState("");
     const [tasks, setTasks] = useState<TaskEntity[]>([]);
     const [isOpenModal, setModal] = useState(false);
-    const taskRepo = new TaskDataRepository();
+    const taskRepo = new TaskLocalStorageDataRepository();
 
     function add(){
         let result = false;
@@ -41,8 +41,8 @@ export const TodoPage = () => {
         const result = taskRepo.updateTask(value);
 
         if(result){
-            setModal(false);
             fetchAllTasks();
+            setModal(false);
         }
     }
 
