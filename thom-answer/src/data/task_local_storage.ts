@@ -21,8 +21,24 @@ export class TaskLocalStorageDataRepository implements TaskRepository{
 
         return [] as TaskEntity[];
     }
-    async getTask(): Promise<TaskEntity> {
-        throw new Error("Method not implemented.");
+    getTask(id: string): TaskEntity | null {
+        let task: TaskEntity | null = null;
+
+        // GET THE CURRENT TASKS IN LOCAL STORAGE
+        let currentTasks: TaskEntity[] = [];
+        let storageData = storageGetItem("tasks");
+
+        if(storageData != null){
+            currentTasks = JSON.parse(storageData);
+
+            currentTasks.forEach(element => {
+                if(element['id'] == id){
+                    task = element;
+                }
+            });
+        }
+
+        return task;
     }
     addTask(value: TaskEntity): boolean {
         try{
