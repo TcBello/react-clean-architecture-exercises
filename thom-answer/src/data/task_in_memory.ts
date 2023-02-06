@@ -2,7 +2,7 @@ import { TaskEntity } from "../domain/entities/task";
 import { TaskRepository } from "../domain/repositories/task";
 
 export class TaskInMemoryDataRepository implements TaskRepository{
-    public _tasks: TaskEntity[] = [];
+    private _tasks: TaskEntity[] = [];
 
     getAllTasks(): TaskEntity[] {
         return this._tasks;
