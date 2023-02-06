@@ -6,19 +6,62 @@ import { features } from "process";
 import { Box } from "@mui/system";
 import "./todo_page.css";
 import { TaskLocalStorageDataRepository } from "../../data/task_local_storage";
+import { AddTaskUsecase } from "../../domain/usecases/add_task_usecase";
+import { TaskInMemoryDataRepository } from "../../data/task_in_memory";
+import { RemoveTaskUsecase } from "../../domain/usecases/remove_task_usecase";
+import { UpdateTaskUsecase } from "../../domain/usecases/update_task_usecase";
+import { GetTaskUsecase } from "../../domain/usecases/get_task_usecase";
+import { GetAllTasksUsecase } from "../../domain/usecases/get_all_tasks_usecase";
+
+enum TaskStorage{
+    inMemory,
+    localStorage
+}
 
 export const TodoPage = () => {
     const [title, setTitle] = useState("");
     const [taskId, setTaskId] = useState("");
     const [tasks, setTasks] = useState<TaskEntity[]>([]);
     const [isOpenModal, setModal] = useState(false);
-    const taskRepo = new TaskLocalStorageDataRepository();
+    const [taskStorage, setTaskStorage] = useState(TaskStorage.localStorage);
+    const addTaskUsecase = new AddTaskUsecase(taskStorage == TaskStorage.inMemory
+        ? new TaskInMemoryDataRepository()
+        : new TaskLocalStorageDataRepository()
+    );
+    const removeTaskUsecase = new RemoveTaskUsecase(taskStorage == TaskStorage.inMemory
+        ? new TaskInMemoryDataRepository()
+        : new TaskLocalStorageDataRepository()
+    );
+    const updateTaskUsecase = new UpdateTaskUsecase(taskStorage == TaskStorage.inMemory
+        ? new TaskInMemoryDataRepository()
+        : new TaskLocalStorageDataRepository()
+    );
+    const getTaskUsecase = new GetTaskUsecase(taskStorage == TaskStorage.inMemory
+        ? new TaskInMemoryDataRepository()
+        : new TaskLocalStorageDataRepository()
+    );
+    const getAllTaskUsecase = new GetAllTasksUsecase(taskStorage == TaskStorage.inMemory
+        ? new TaskInMemoryDataRepository()
+        : new TaskLocalStorageDataRepository()
+    );
+
+    async function changeTaskStorage(){
+        if(taskStorage == TaskStorage.inMemory){
+            setTaskStorage(TaskStorage.localStorage);
+        }
+
+        if(taskStorage == TaskStorage.localStorage){
+            setTaskStorage(TaskStorage.inMemory);
+        }
+
+        fetchAllTasks();
+    }
 
     function add() {
         let result = false;
 
         if (title != "") {
-            result = taskRepo.addTask(new TaskEntity(uid(32), title));
+            result = addTaskUsecase.addTask(new TaskEntity(uid(32), title));
             fetchAllTasks();
         }
 
@@ -28,12 +71,13 @@ export const TodoPage = () => {
     }
 
     function fetchAllTasks() {
-        const currentTasks = taskRepo.getAllTasks();
+        const currentTasks = getAllTaskUsecase.getAllTasks();
         setTasks(currentTasks);
+        console.log(currentTasks);
     }
 
     function remove(value: TaskEntity) {
-        const result = taskRepo.removeTask(value);
+        const result = removeTaskUsecase.removeTask(value);
 
         if (result) fetchAllTasks();
     }
@@ -41,7 +85,7 @@ export const TodoPage = () => {
     function update() {
         if (!taskId) return;
 
-        const result = taskRepo.updateTask(new TaskEntity(taskId, title));
+        const result = updateTaskUsecase.updateTask(new TaskEntity(taskId, title));
         if (result) {
             fetchAllTasks();
             setModal(false);
@@ -51,7 +95,7 @@ export const TodoPage = () => {
 
     useEffect(() => {
         fetchAllTasks();
-    }, []);
+    }, [taskStorage]);
 
     return (
         <>
@@ -69,6 +113,9 @@ export const TodoPage = () => {
             </Modal>
             <div className='background-gradient'>
                 <div className='content-center'>
+                    {/* CHANGE TASK STORAGE BUTTON */}
+                <Button variant="contained" style={{ width: '15%', height: 50, backgroundColor: '#0052A2' }} onClick={changeTaskStorage}>Change Task Storage</Button>
+                <p style={{width: 'auto', height: 50, padding: 5, color: "white"}}><b>Task Storage:</b> {taskStorage == TaskStorage.inMemory ? "In Memory" : "Local Storage"}</p>
                     <div className='todo-container'>
                         {/* TODO FIELD */}
                         <TextField id="filled-basic" label="Add New Todo" variant="filled" className='todo-input' onChange={(e) => { setTitle(e.target.value) }} />

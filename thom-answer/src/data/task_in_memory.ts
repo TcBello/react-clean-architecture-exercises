@@ -1,8 +1,8 @@
 import { TaskEntity } from "../domain/entities/task";
 import { TaskRepository } from "../domain/repositories/task";
 
-export class TaskInMemory implements TaskRepository{
-    private _tasks: TaskEntity[] = [];
+export class TaskInMemoryDataRepository implements TaskRepository{
+    public _tasks: TaskEntity[] = [];
 
     getAllTasks(): TaskEntity[] {
         return this._tasks;
