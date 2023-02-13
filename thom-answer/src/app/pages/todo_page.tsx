@@ -12,6 +12,9 @@ import { RemoveTaskUsecase } from "../../domain/usecases/remove_task_usecase";
 import { UpdateTaskUsecase } from "../../domain/usecases/update_task_usecase";
 import { GetTaskUsecase } from "../../domain/usecases/get_task_usecase";
 import { GetAllTasksUsecase } from "../../domain/usecases/get_all_tasks_usecase";
+import { useDispatch } from "react-redux";
+import { addTodo, getAllTodo, removeTodo, updateTodo } from '../redux/todo/actions';
+import { addTask } from "../redux/task/slice";
 
 enum TaskStorage{
     inMemory,
@@ -24,6 +27,9 @@ export const TodoPage = () => {
     const [tasks, setTasks] = useState<TaskEntity[]>([]);
     const [isOpenModal, setModal] = useState(false);
     const [taskStorage, setTaskStorage] = useState(TaskStorage.localStorage);
+    
+    const dispatch = useDispatch();
+
     const addTaskUsecase = new AddTaskUsecase(taskStorage == TaskStorage.inMemory
         ? new TaskInMemoryDataRepository()
         : new TaskLocalStorageDataRepository()
@@ -61,7 +67,9 @@ export const TodoPage = () => {
         let result = false;
 
         if (title != "") {
-            result = addTaskUsecase.addTask(new TaskEntity(uid(32), title));
+            // result = addTaskUsecase.addTask(new TaskEntity(uid(32), title));
+            dispatch(addTodo(new TaskEntity(uid(32), title)) as any);
+            // dispatch(addTask() as any);
             fetchAllTasks();
         }
 
@@ -77,20 +85,26 @@ export const TodoPage = () => {
     }
 
     function remove(value: TaskEntity) {
-        const result = removeTaskUsecase.removeTask(value);
+        // const result = removeTaskUsecase.removeTask(value);
+        dispatch(removeTodo(value) as any);
+        fetchAllTasks();
 
-        if (result) fetchAllTasks();
+        // if (result) fetchAllTasks();
     }
 
     function update() {
         if (!taskId) return;
 
-        const result = updateTaskUsecase.updateTask(new TaskEntity(taskId, title));
-        if (result) {
-            fetchAllTasks();
-            setModal(false);
-            setTaskId("")
-        }
+        // const result = updateTaskUsecase.updateTask(new TaskEntity(taskId, title));
+        dispatch(updateTodo(new TaskEntity(taskId, title)) as any);
+        fetchAllTasks();
+        setModal(false);
+        setTaskId("")
+        // if (result) {
+        //     fetchAllTasks();
+        //     setModal(false);
+        //     setTaskId("")
+        // }
     }
 
     useEffect(() => {
